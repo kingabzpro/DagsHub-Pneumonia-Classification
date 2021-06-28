@@ -8,5 +8,5 @@ RAW_TEST_PATH = os.path.join(BASE_PATH,'task-2-data-processing/data/processed-da
 INIT_EPOCHS = 1
 LEARNING_RATE = 1e-6
 
-CSV_LOG_PATH = 'eval/metrics/TF_training_logs.csv'
-CHECKPOINT_PATH = 'model/TF-Model-Checkpoint/'
+CSV_LOG_PATH = 'task-3-modeling/eval/metrics/TF_training_logs.csv'
+CHECKPOINT_PATH = 'task-3-modeling/model/TF-Model-Checkpoint/'

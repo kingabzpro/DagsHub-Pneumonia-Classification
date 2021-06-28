@@ -1,8 +1,8 @@
 import tensorflow as tf
-import json
-from .utiles.functions import print_data, load_dataset
-from .const.train_const import *
-from .const.general_const import *
+from utiles.functions import print_data, load_dataset
+from const.train_const import *
+from const.general_const import *
+
 
 def preprocess_data_layers():
     data_augmentation_layer = tf.keras.Sequential(
@@ -24,20 +24,9 @@ def build_model(data_augmentation, rescale, img_shape=IMG_SHAPE,
     base_model = tf.keras.applications.ResNet50V2(include_top=False,
                                              weights='imagenet',
                                              input_shape=img_shape)
-
-    image_batch, label_batch = next(iter(train_dataset))
-    feature_batch = base_model(image_batch)
-    # print(feature_batch.shape)
-
     base_model.trainable = False
-
     global_average_layer = tf.keras.layers.GlobalAveragePooling2D()
-    feature_batch_average = global_average_layer(feature_batch)
-    # print(feature_batch_average.shape)
-
     prediction_layer = tf.keras.layers.Dense(num_class, activation='softmax')
-    prediction_batch = prediction_layer(feature_batch_average)
-    # print(prediction_batch.shape)
 
     inputs = tf.keras.Input(shape=img_shape)
     x = data_augmentation(inputs)
@@ -81,11 +70,6 @@ if __name__ == '__main__':
 
     data_augmentation_layer, rescale_layer = preprocess_data_layers()
 
-    print_data(validation_dataset, class_names, notebook=NOTEBOOK,
-               process=True, save=True, predict=False,
-               save_path='eval/processed_data', rescale_layer=rescale_layer,
-               data_augmentation_layer=data_augmentation_layer)
-
     model = build_model(data_augmentation_layer, rescale_layer, IMG_SHAPE, LEARNING_RATE)
 
     csv_logger, early_stopping, model_checkpoint = get_callbacks(CSV_LOG_PATH, CHECKPOINT_PATH)
@@ -94,5 +78,3 @@ if __name__ == '__main__':
                         epochs=INIT_EPOCHS,
                         validation_data=validation_dataset,
                         callbacks=[csv_logger, early_stopping, model_checkpoint])
-
-    json.dump(history.params, open("model/TF-Model-Checkpoint/history_params.json", 'w'))

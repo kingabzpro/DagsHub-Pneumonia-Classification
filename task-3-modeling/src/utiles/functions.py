@@ -1,14 +1,17 @@
-import os
-import matplotlib.pyplot as plt
 import glob
+import os
+
+import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image_dataset_from_directory
-from pathlib import Path, PurePosixPath
+from src.const.general_const import COLOR_MODE
+
 
 def load_dataset(data_path, batch_size, img_size, label_mode):
     return image_dataset_from_directory(data_path, shuffle=True, batch_size=batch_size,
-                                        image_size=img_size, label_mode=label_mode)
+                                        image_size=img_size, label_mode=label_mode,
+                                        color_mode=COLOR_MODE)
 
 
 def remove_img_in_dir(save_path):

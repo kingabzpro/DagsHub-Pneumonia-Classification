@@ -1,10 +1,12 @@
 import tensorflow as tf
-from utiles.functions import print_data, load_dataset
-from const.train_const import *
-from const.general_const import *
+
+from .const.modeling_const import PROCESSED_TRAIN_PATH, PROCESSED_TEST_PATH, CLASS_MODE, INIT_EPOCHS, \
+    LEARNING_RATE, BATCH_SIZE, CSV_LOG_PATH, CHECKPOINT_PATH, CLASS_NAME_PATH
+from .utiles.functions import print_data, load_dataset
+from src.const.general_const import NOTEBOOK, IMG_SIZE, IMG_SHAPE
 
 
-def preprocess_data_layers():
+def augmentation_and_process_layers():
     data_augmentation_layer = tf.keras.Sequential(
         [
             tf.keras.layers.experimental.preprocessing.RandomFlip("horizontal"),
@@ -58,8 +60,8 @@ def get_callbacks(csv_logger_path, checkpoint_filepath):
 
 
 if __name__ == '__main__':
-    train_dataset = load_dataset(RAW_TRAIN_PATH, BATCH_SIZE, IMG_SIZE, LABEL_MODE)
-    validation_dataset = load_dataset(RAW_TEST_PATH, BATCH_SIZE, IMG_SIZE, LABEL_MODE)
+    train_dataset = load_dataset(PROCESSED_TRAIN_PATH, BATCH_SIZE, IMG_SIZE, CLASS_MODE)
+    validation_dataset = load_dataset(PROCESSED_TEST_PATH, BATCH_SIZE, IMG_SIZE, CLASS_MODE)
 
     class_names = train_dataset.class_names
     with open(CLASS_NAME_PATH, "w") as textfile:
@@ -68,7 +70,7 @@ if __name__ == '__main__':
     if NOTEBOOK:
         print_data(validation_dataset, class_names, notebook=NOTEBOOK, process=False, save=False, predict=False)
 
-    data_augmentation_layer, rescale_layer = preprocess_data_layers()
+    data_augmentation_layer, rescale_layer = augmentation_and_process_layers()
 
     model = build_model(data_augmentation_layer, rescale_layer, IMG_SHAPE, LEARNING_RATE)
 
@@ -78,3 +80,4 @@ if __name__ == '__main__':
                         epochs=INIT_EPOCHS,
                         validation_data=validation_dataset,
                         callbacks=[csv_logger, early_stopping, model_checkpoint])
+

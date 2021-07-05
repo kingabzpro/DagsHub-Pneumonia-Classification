@@ -1,10 +1,12 @@
 import tensorflow as tf
 
-from .const.modeling_const import PROCESSED_TRAIN_PATH, PROCESSED_TEST_PATH, CLASS_MODE, INIT_EPOCHS, \
-    LEARNING_RATE, BATCH_SIZE, CSV_LOG_PATH, CHECKPOINT_PATH, CLASS_NAME_PATH
-from .utiles.functions import print_data, load_dataset
-from src.const.general_const import NOTEBOOK, IMG_SIZE, IMG_SHAPE
+from .const.modeling_const import PROCESSED_TRAIN_PATH, PROCESSED_TEST_PATH, INIT_EPOCHS, \
+    LEARNING_RATE, CSV_LOG_PATH, CHECKPOINT_PATH, DH_LOG_PARAM_PATH
 
+from src.utiles.functions import print_data, load_dataset
+from src.const.general_const import NOTEBOOK, IMG_SIZE, IMG_SHAPE, CLASS_NAME_PATH,\
+    CLASS_MODE, BATCH_SIZE, PROD_MODEL_PATH
+from dagshub import dagshub_logger
 
 def augmentation_and_process_layers():
     data_augmentation_layer = tf.keras.Sequential(
@@ -60,6 +62,7 @@ def get_callbacks(csv_logger_path, checkpoint_filepath):
 
 
 if __name__ == '__main__':
+
     train_dataset = load_dataset(PROCESSED_TRAIN_PATH, BATCH_SIZE, IMG_SIZE, CLASS_MODE)
     validation_dataset = load_dataset(PROCESSED_TEST_PATH, BATCH_SIZE, IMG_SIZE, CLASS_MODE)
 
@@ -81,3 +84,7 @@ if __name__ == '__main__':
                         validation_data=validation_dataset,
                         callbacks=[csv_logger, early_stopping, model_checkpoint])
 
+    with dagshub_logger(should_log_metrics=False,hparams_path=DH_LOG_PARAM_PATH) as logger:
+        logger.log_hyperparams(model.history.params)
+
+    model.save(PROD_MODEL_PATH)

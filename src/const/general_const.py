@@ -7,8 +7,6 @@ IMG_SIZE = (224, 224)
 IMG_SHAPE = IMG_SIZE + (3,)
 COLOR_MODE = 'rgb'
 BATCH_SIZE = 32
-HEALTHY = "NORMAL"
-SICK = "PNEUMONIA"
 
 # Dataset params
 CLASS_MODE = 'binary'

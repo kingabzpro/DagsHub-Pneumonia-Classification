@@ -1,0 +1,7 @@
+## The following requirements were added by pip freeze:
+scikit-learn==0.24.1
+scipy==1.6.2
+six==1.12.0
+sklearn==0.0
+threadpoolctl==2.1.0
+Werkzeug==0.15.5

@@ -10,6 +10,6 @@ INIT_EPOCHS = 1
 LEARNING_RATE = 1e-6
 
 # Save path
-CSV_LOG_PATH = os.path.join(BASE_PATH,'task-3-modeling/model/TF_training_logs.csv')
-CHECKPOINT_PATH = os.path.join(BASE_PATH,'task-3-modeling/model/TF-Model-Checkpoint/')
+CSV_LOG_PATH = os.path.join(BASE_PATH,'task-3-modeling/model-checkpoint/TF_training_logs.csv')
+CHECKPOINT_PATH = os.path.join(BASE_PATH,'task-3-modeling/model-checkpoint/TF-Model-Checkpoint/')
 DH_LOG_PARAM_PATH = os.path.join(BASE_PATH,'task-4-evaluating/eval/params/params.yml')

@@ -19,5 +19,5 @@ if __name__ == '__main__':
     with open(CLASS_NAME_PATH, "r") as textfile:
         class_names = textfile.read().split(',')
 
-    print_data(test_dataset, class_names, notebook=NOTEBOOK, process=False, save=True,
-               predict=True, save_path=PRED_PATH, model=model)
+    # print_data(test_dataset, class_names, notebook=NOTEBOOK, process=False, save=True,
+    #            predict=True, save_path=PRED_PATH, model=model)

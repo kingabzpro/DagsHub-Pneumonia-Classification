@@ -9,7 +9,8 @@ COLOR_MODE = 'rgb'
 BATCH_SIZE = 32
 
 # Dataset params
-CLASS_MODE = 'categorical'
+CLASS_MODE = 'binary'
+NUM_CLASS = 1
 
 BASE_PATH = os.getcwd()
 CLASS_NAME_PATH = os.path.join(BASE_PATH,"task-3-modeling/src/const/class_names.txt")

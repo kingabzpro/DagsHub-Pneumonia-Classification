@@ -5,7 +5,7 @@ from .const.modeling_const import PROCESSED_TRAIN_PATH, PROCESSED_TEST_PATH, INI
 
 from src.utiles.functions import print_data, load_dataset
 from src.const.general_const import NOTEBOOK, IMG_SIZE, IMG_SHAPE, CLASS_NAME_PATH,\
-    CLASS_MODE, BATCH_SIZE, PROD_MODEL_PATH
+    CLASS_MODE, BATCH_SIZE, PROD_MODEL_PATH, NUM_CLASS
 from dagshub import dagshub_logger
 
 def augmentation_and_process_layers():
@@ -23,14 +23,14 @@ def augmentation_and_process_layers():
 
 
 def build_model(data_augmentation, rescale, img_shape=IMG_SHAPE,
-                learning_rate=LEARNING_RATE, num_class=2):
+                learning_rate=LEARNING_RATE, num_class=NUM_CLASS):
     
     base_model = tf.keras.applications.ResNet50V2(include_top=False,
                                              weights='imagenet',
                                              input_shape=img_shape)
     base_model.trainable = False
     global_average_layer = tf.keras.layers.GlobalAveragePooling2D()
-    prediction_layer = tf.keras.layers.Dense(num_class, activation='softmax')
+    prediction_layer = tf.keras.layers.Dense(num_class, activation='sigmoid')
 
     inputs = tf.keras.Input(shape=img_shape)
     x = data_augmentation(inputs)
@@ -42,7 +42,7 @@ def build_model(data_augmentation, rescale, img_shape=IMG_SHAPE,
     model = tf.keras.Model(inputs, outputs)
 
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
-                  loss='categorical_crossentropy',
+                  loss='binary_crossentropy',
                   metrics=['accuracy'])
 
     return model

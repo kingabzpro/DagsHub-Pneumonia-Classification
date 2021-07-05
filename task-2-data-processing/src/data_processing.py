@@ -1,11 +1,11 @@
 import os
 import glob
 import cv2 as cv
-from ...src.const.general_const import IMG_SIZE
+from src.const.general_const import IMG_SIZE
 from .const.processing_const import RAW_TRAIN_PATH, RAW_TEST_PATH, RAW_VAL_PATH, BASE_PROC_DIR
 from pathlib import Path
 
-
+# Create list of files
 RAW_TRAIN_PNEUMONIA_FILE_LIST = glob.glob(os.path.join(RAW_TRAIN_PATH,"PNEUMONIA/*"))
 RAW_TRAIN_NORMAL_FILE_LIST = glob.glob(os.path.join(RAW_TRAIN_PATH,"NORMAL/*"))
 
@@ -15,19 +15,17 @@ RAW_TEST_NORMAL_FILE_LIST = glob.glob(os.path.join(RAW_TEST_PATH,"NORMAL/*"))
 RAW_VAL_PNEUMONIA_FILE_LIST = glob.glob(os.path.join(RAW_VAL_PATH,"PNEUMONIA/*"))
 RAW_VAL_NORMAL_FILE_LIST = glob.glob(os.path.join(RAW_VAL_PATH,"NORMAL/*"))
 
-print("Loading RAW_TRAIN..")
+# Load data
 RAW_TRAIN_PNEUMONIA= [cv.resize(cv.imread(path), IMG_SIZE) for path in RAW_TRAIN_PNEUMONIA_FILE_LIST]
 RAW_TRAIN_NORMAL= [cv.resize(cv.imread(path), IMG_SIZE) for path in RAW_TRAIN_NORMAL_FILE_LIST]
 
-print("Loading RAW_TEST..")
 RAW_TEST_PNEUMONIA= [cv.resize(cv.imread(path), IMG_SIZE) for path in RAW_TEST_PNEUMONIA_FILE_LIST]
 RAW_TEST_NORMAL= [cv.resize(cv.imread(path), IMG_SIZE) for path in RAW_TEST_NORMAL_FILE_LIST]
 
-print("Loading RAW_VAL..")
 RAW_VAL_PNEUMONIA= [cv.resize(cv.imread(path), IMG_SIZE) for path in RAW_VAL_PNEUMONIA_FILE_LIST]
 RAW_VAL_NORMAL= [cv.resize(cv.imread(path), IMG_SIZE) for path in RAW_VAL_NORMAL_FILE_LIST]
 
-
+# Create path
 Path(BASE_PROC_DIR).mkdir(parents=True, exist_ok=True)
 
 def process_img(img_list_of_list, img_path_list_of_list, BASE_PROC_DIR):
@@ -54,5 +52,5 @@ img_list_of_list = [RAW_TRAIN_PNEUMONIA, RAW_TRAIN_NORMAL, RAW_TEST_PNEUMONIA, R
                     RAW_VAL_PNEUMONIA, RAW_VAL_NORMAL]
 img_path_list_of_list = [RAW_TRAIN_PNEUMONIA_FILE_LIST, RAW_TRAIN_NORMAL_FILE_LIST,RAW_TEST_PNEUMONIA_FILE_LIST,
                          RAW_TEST_NORMAL_FILE_LIST, RAW_VAL_PNEUMONIA_FILE_LIST, RAW_VAL_NORMAL_FILE_LIST]
-
+# Process the images
 process_img(img_list_of_list, img_path_list_of_list, BASE_PROC_DIR)

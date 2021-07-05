@@ -1,2 +1,4 @@
+[core]
+    remote = origin
 ['remote "origin"']
     url = https://dagshub.com/nirbarazida/Pneumonia-Classification-Monorepo.dvc

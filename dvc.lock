@@ -62,13 +62,13 @@ stages:
     - path: src/const/general_const.py
       md5: 730d05e22f3defa392555d8a311c55a8
       size: 363
-    - path: task-4-evaluating/const/evaluating_const.py
+    - path: task-4-evaluating/src/const/evaluating_const.py
       md5: bc97cc442ada9f93ab1b7212ed063e89
       size: 290
     - path: task-4-evaluating/src/evaluation.py
-      md5: 82268d65704e1401437ef0871c67723b
-      size: 1066
+      md5: 5027d59bc20658a00cae3eb0e2355932
+      size: 1032
     outs:
     - path: task-4-evaluating/eval/metrics/metrics.csv
-      md5: 17bb47fb77f337c3e7d183381bcaa036
+      md5: 700b690d8dd5df0815d234f7a1120da9
       size: 121

@@ -29,7 +29,7 @@ stages:
     deps:
     - prod_model
     - src/const/general_const.py
-    - task-4-evaluating/const/evaluating_const.py
+    - task-4-evaluating/src/const/evaluating_const.py
     - task-4-evaluating/src/evaluation.py
     metrics:
     - task-4-evaluating/eval/metrics/metrics.csv:

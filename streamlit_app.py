@@ -1,43 +1,24 @@
+# todo: Add side bar with option to choose from library or upload new image
+# todo: Add SHORT_DESCRIPTION
+# todo: Add message with prediction & color red/green
+# todo: Change val set to be traced by git & change img path here
+# todo: add docstrings to functions
+
+# todo: not streamlit - Add wights to the model, change basepath in const to general const
+
 import streamlit as st
 import cv2 as cv
 from PIL import Image
 import numpy as np
 import tensorflow as tf
 from src.const.general_const import PROD_MODEL_PATH, IMG_SIZE, CLASS_NAME_PATH
-
-# const
-import os
-
-BASE_PATH = os.getcwd()
-DAGSHUB_IMAGE_PATH = os.path.join(BASE_PATH, "task-5-streamlit-app/images/dagshub.png")
-
-HEALTHY_IMAGE_ONE_PATH = os.path.join(BASE_PATH,
-                                      "task-1-data-labeling/data/labeled-data/val/NORMAL/NORMAL2-IM-1427-0001.jpeg")
-HEALTHY_IMAGE_TWO_PATH = os.path.join(BASE_PATH,
-                                      "task-1-data-labeling/data/labeled-data/val/NORMAL/NORMAL2-IM-1430-0001.jpeg")
-SICK_IMAGE_ONE_PATH = os.path.join(BASE_PATH,
-                                   "task-1-data-labeling/data/labeled-data/val/PNEUMONIA/person1946_bacteria_4874.jpeg")
-SICK_IMAGE_TWO_PATH = os.path.join(BASE_PATH,
-                                   "task-1-data-labeling/data/labeled-data/val/PNEUMONIA/person1946_bacteria_4875.jpeg")
-
-HEADER = "Pneumonia-Classification"
-SUB_HEADER = "Classifying chest X-Ray images for Pneumonia"
-SHORT_DESCRIPTION = """
-                    This application is
-                    """
-IMAGE_POOL_DESCRIPTION = "You can choose one of the following images in the sidebar menu " \
-                         "for the model to predict for Pneumonia"
-
-
-# todo: Add side bar with option to choose from library or upload new image
-# todo: Add SHORT_DESCRIPTION
-# todo: Add message with prediction & color red/green
-# todo: Change val set to be traced by git & change img path here
-
-# todo: not streamlit - Add wights to the model, change basepath in const to general const
+from task_5_streamlit.src.const.streamlit_const import \
+    DAGSHUB_IMAGE_PATH, HEALTHY_IMAGE_ONE_PATH,HEALTHY_IMAGE_TWO_PATH, SICK_IMAGE_ONE_PATH, SICK_IMAGE_TWO_PATH,HEADER,\
+    SUB_HEADER, SHORT_DESCRIPTION, IMAGE_POOL_DESCRIPTION, SELECT_BOX_TEXT, SUPPORTED_IMG_TYPE, WARNING_MSG, SUCCESS_MSG, \
+    BIG_FONT, MID_FONT, SMALL_FONT
 
 def markdown_format(font_size,content):
-    st.markdown(f"<{font_size} style='text-align: center; color: black;'>{content}</{font_size}>",
+    st.markdown(f"<{font_size} style='text-align: center;'>{content}</{font_size}>",
                 unsafe_allow_html=True)
 
 def load_n_resize_image(image_path):
@@ -61,9 +42,9 @@ def present_pool(col, col_name, img_list):
 
 def display_prediction(pred):
     if pred == 'sick':
-        st.warning('Unfortunately we have bad news, our model detects that you have Pneumonia')
+        st.warning(WARNING_MSG)
     else:
-        st.success("We have GREAT news! Based on our model, you don't have Pneumonia!")
+        st.success(SUCCESS_MSG)
 
 
 @st.cache(suppress_st_warning=True)
@@ -92,7 +73,7 @@ def predict_for_selectbox(selectbox, my_bar, latest_iteration):
 def predict_for_file_buffer(file_buffer, my_bar, latest_iteration):
     latest_iteration.text('Loading image')
     img = load_n_resize_image(file_buffer)
-    markdown_format('h3', "Your chest X-ray")
+    markdown_format(MID_FONT, "Your chest X-ray")
     st.image(img, use_column_width=True)
     my_bar.progress(50)
 
@@ -109,25 +90,25 @@ if __name__ == '__main__':
 
     # Base Design
     st.image(image=DAGSHUB_IMAGE_PATH)
-    markdown_format('h1', HEADER)
-    markdown_format('h3', SUB_HEADER)
-    markdown_format('p', SHORT_DESCRIPTION)
+    markdown_format(BIG_FONT, HEADER)
+    markdown_format(MID_FONT, SUB_HEADER)
+    markdown_format(SMALL_FONT, SHORT_DESCRIPTION)
     latest_iteration = st.empty()
     my_bar = st.progress(0)
 
     # Show pool of images
     dict_of_img_lists = load_image_pool()
     with st.beta_expander("Image Pool"):
-        markdown_format('h3', IMAGE_POOL_DESCRIPTION)
+        markdown_format(MID_FONT, IMAGE_POOL_DESCRIPTION)
         col1, col2 = st.beta_columns(2)
         healthy_sidebar_list = present_pool(col1, "healthy", dict_of_img_lists['healthy'])
         sick_sidebar_list = present_pool(col2, "sick", dict_of_img_lists['sick'])
 
     # Sidebar
-    selectbox = st.sidebar.selectbox("Choose an image for the model to predict?",
+    selectbox = st.sidebar.selectbox(SELECT_BOX_TEXT,
                                      [None] + healthy_sidebar_list + sick_sidebar_list)
 
-    file_buffer = st.sidebar.file_uploader("", type=["png", "jpg", "jpeg"])
+    file_buffer = st.sidebar.file_uploader("", type=SUPPORTED_IMG_TYPE)
 
     # Predict for user selection
     if selectbox:

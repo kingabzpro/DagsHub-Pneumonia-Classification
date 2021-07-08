@@ -21,15 +21,11 @@ The folders are divided into sub-folders for each image category - Pneumonia and
 - All the specified requirements in the text file
 
 ## Usage
-1) Clone this repository.
-   
-2) Install requirements.txt using `pip install -r requirements.txt`.
-   
-3) Use DVC to pull the files that are stored on the DAGsHub remote storage by running `dvc pull`
-
-4) Modify the code as you wish. 
-   
-5) Run `dvc repro` to run the pipeline and train the model.
+1. Clone this repository.
+2. Install requirements.txt using `pip install -r requirements.txt`.
+3. Use DVC to pull the files that are stored on the DAGsHub remote storage by running `dvc pull`
+4. Modify the code as you wish.
+5. Run `dvc repro` to run the pipeline and train the model.
 
 **Note:** *If you are adding/removing/moving files to different directories, it can affect the DVC pipeline, and therefore
 the `dvc repro` command might not run properly.*

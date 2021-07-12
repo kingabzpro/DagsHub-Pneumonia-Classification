@@ -76,7 +76,6 @@ ruamel.yaml==0.17.10
 ruamel.yaml.clib==0.2.6
 shortuuid==1.0.1
 shtab==1.3.7
-streamlit==0.84.0
 six==1.15.0
 smmap==4.0.0
 streamlit==0.84.0

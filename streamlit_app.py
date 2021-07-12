@@ -1,10 +1,10 @@
-# todo: Add side bar with option to choose from library or upload new image
-# todo: Add SHORT_DESCRIPTION
-# todo: Add message with prediction & color red/green
+# todo: Edit SHORT_DESCRIPTION
 # todo: Change val set to be traced by git & change img path here
 # todo: add docstrings to functions
 
-# todo: not streamlit - Add wights to the model, change basepath in const to general const
+# todo general:
+#  - Add wights to the model,
+#  - change base path in const to general const
 
 import streamlit as st
 import cv2 as cv

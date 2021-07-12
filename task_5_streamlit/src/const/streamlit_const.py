@@ -15,8 +15,16 @@ SICK_IMAGE_TWO_PATH = os.path.join(BASE_PATH,
 HEADER = "Pneumonia-Classification"
 SUB_HEADER = "Classifying chest X-Ray images for Pneumonia"
 SHORT_DESCRIPTION = """
-                    This application is
-                    """
+This application is classifying chest X-Ray images for Pneumonia using the model implemented in the 
+<a href="https://dagshub.com/nirbarazida/Pneumonia-Classification">Pneumonia-Classification </a> project.
+<br>
+<p>
+<strong>Usage:</strong> On the sidebar, you have two options to choose from for using the model:
+<ol>
+        <li> You can upload your chest X-Ray image in a PNG, JPG, or JPEG format. </li>
+        <li> You can choose one of the images in the `Image Pool` presented below. </li>
+</ol>
+</p>                    """
 IMAGE_POOL_DESCRIPTION = "You can choose one of the following images in the sidebar menu " \
                          "for the model to predict for Pneumonia"
 

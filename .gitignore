@@ -20,6 +20,7 @@ lib/
 lib64/
 parts/
 sdist/
+venv/
 var/
 *.egg-info/
 .installed.cfg
@@ -64,3 +65,4 @@ __pycache__/.idea/
 .idea/
 .ipynb_checkpoints/
 /prod_model
+/data

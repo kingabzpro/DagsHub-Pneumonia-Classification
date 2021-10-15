@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
     mlflow.set_tracking_uri(f'https://dagshub.com/{DAGSHUB_REPO_OWNER}/{DAGSHUB_REPO_NAME}.mlflow')
 
-    training_generator, validation_generator, test_generator = get_data_generators(DATA_DIR='/home/jinen/git/Pneumonia-Classification/data/',
+    training_generator, validation_generator, test_X, test_Y = get_data_generators(DATA_DIR='/home/jinen/git/Pneumonia-Classification/data/',
                                                                                    PROJECT_NAME=PROJECT_NAME,
                                                                                    BATCH_SIZE=BATCH_SIZE,
                                                                                    DIM=IMG_SIZE)

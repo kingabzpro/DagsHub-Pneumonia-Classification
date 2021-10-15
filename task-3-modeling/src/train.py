@@ -1,45 +1,30 @@
+import mlflow
+
+import os
 import tensorflow as tf
+from tensorflow.keras.applications import densenet
 
-from .const.modeling_const import PROCESSED_TRAIN_PATH, PROCESSED_TEST_PATH, INIT_EPOCHS, \
-    LEARNING_RATE, CSV_LOG_PATH, CHECKPOINT_PATH, DH_LOG_PARAM_PATH
+from const.modeling_const import PROCESSED_TRAIN_PATH, PROCESSED_TEST_PATH, INIT_EPOCHS, LEARNING_RATE, CSV_LOG_PATH, CHECKPOINT_PATH, DH_LOG_PARAM_PATH
 
-from src.utiles.functions import print_data, load_dataset
-from src.const.general_const import NOTEBOOK, IMG_SIZE, IMG_SHAPE, CLASS_NAME_PATH,\
-    CLASS_MODE, BATCH_SIZE, PROD_MODEL_PATH, NUM_CLASS
+from task2.data_processing import get_data_generators
+
+#from base.utiles.functions import print_data, load_dataset
+from base.const.general_const import NOTEBOOK, IMG_SIZE, IMG_SHAPE, CLASS_NAME_PATH,\
+    CLASS_MODE, BATCH_SIZE, PROD_MODEL_PATH, PROJECT_NAME
 from dagshub import dagshub_logger
 
-def augmentation_and_process_layers():
-    data_augmentation_layer = tf.keras.Sequential(
-        [
-            tf.keras.layers.experimental.preprocessing.RandomFlip("horizontal"),
-            tf.keras.layers.experimental.preprocessing.RandomRotation(0.05),
-            tf.keras.layers.experimental.preprocessing.RandomZoom(0.05)
-        ]
-    )
+def build_model(img_shape=IMG_SHAPE,
+                learning_rate=LEARNING_RATE):
 
-    rescale_layer = tf.keras.layers.experimental.preprocessing.Rescaling(1. / 255)
+    model = densenet.DenseNet121(weights='imagenet',
+                             include_top=False,
+                             input_shape=img_shape, pooling="avg")
 
-    return data_augmentation_layer, rescale_layer
-
-
-def build_model(data_augmentation, rescale, img_shape=IMG_SHAPE,
-                learning_rate=LEARNING_RATE, num_class=NUM_CLASS):
-    
-    base_model = tf.keras.applications.ResNet50V2(include_top=False,
-                                             weights='imagenet',
-                                             input_shape=img_shape)
-    base_model.trainable = False
-    global_average_layer = tf.keras.layers.GlobalAveragePooling2D()
-    prediction_layer = tf.keras.layers.Dense(num_class, activation='sigmoid')
-
-    inputs = tf.keras.Input(shape=img_shape)
-    x = data_augmentation(inputs)
-    x = rescale(x)
-    x = base_model(x, training=False)
-    x = global_average_layer(x)
-    x = tf.keras.layers.Dropout(0.2)(x)
-    outputs = prediction_layer(x)
-    model = tf.keras.Model(inputs, outputs)
+    predictions = tf.keras.layers.Dense(1,
+                                        activation='sigmoid',
+                                        name='predictions')(model.output)
+    model = tf.keras.Model(inputs=model.input, outputs=predictions)
+    model.layers.pop()
 
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
                   loss='binary_crossentropy',
@@ -63,25 +48,35 @@ def get_callbacks(csv_logger_path, checkpoint_filepath):
 
 if __name__ == '__main__':
 
-    train_dataset = load_dataset(PROCESSED_TRAIN_PATH, BATCH_SIZE, IMG_SIZE, CLASS_MODE)
-    validation_dataset = load_dataset(PROCESSED_TEST_PATH, BATCH_SIZE, IMG_SIZE, CLASS_MODE)
+    DAGSHUB_USER_NAME = input("DAGsHub Username:")
+    DAGSHUB_TOKEN = input(f"Token for {DAGSHUB_USER_NAME}:")
+    DAGSHUB_REPO_NAME = "Pneumonia-Classification"
+    DAGSHUB_REPO_OWNER = "nirbarazida"
 
-    class_names = train_dataset.class_names
-    with open(CLASS_NAME_PATH, "w") as textfile:
-        textfile.write(",".join(class_names))
+    os.environ['MLFLOW_TRACKING_USERNAME'] = DAGSHUB_USER_NAME
+    os.environ['MLFLOW_TRACKING_PASSWORD'] = DAGSHUB_TOKEN
 
-    if NOTEBOOK:
-        print_data(validation_dataset, class_names, notebook=NOTEBOOK, process=False, save=False, predict=False)
+    mlflow.set_tracking_uri(f'https://dagshub.com/{DAGSHUB_REPO_OWNER}/{DAGSHUB_REPO_NAME}.mlflow')
 
-    data_augmentation_layer, rescale_layer = augmentation_and_process_layers()
+    training_generator, validation_generator, test_generator = get_data_generators(DATA_DIR='/home/jinen/git/Pneumonia-Classification/data/',
+                                                                                   PROJECT_NAME=PROJECT_NAME,
+                                                                                   BATCH_SIZE=BATCH_SIZE,
+                                                                                   DIM=IMG_SIZE)
 
-    model = build_model(data_augmentation_layer, rescale_layer, IMG_SHAPE, LEARNING_RATE)
+    ## Temporary
+    #class_names = train_dataset.class_names
+    #with open(CLASS_NAME_PATH, "w") as textfile:
+        #textfile.write(",".join(class_names))
 
+    #if NOTEBOOK:
+        #print_data(validation_dataset, class_names, notebook=NOTEBOOK, process=False, save=False, predict=False)
+
+    model = build_model(IMG_SHAPE, LEARNING_RATE)
     csv_logger, early_stopping, model_checkpoint = get_callbacks(CSV_LOG_PATH, CHECKPOINT_PATH)
-
-    history = model.fit(train_dataset,
+    history = model.fit(training_generator,
                         epochs=INIT_EPOCHS,
-                        validation_data=validation_dataset,
+                        validation_data=validation_generator,
+                        use_multiprocessing=True,
                         callbacks=[csv_logger, early_stopping, model_checkpoint])
 
     with dagshub_logger(should_log_metrics=False,hparams_path=DH_LOG_PARAM_PATH) as logger:

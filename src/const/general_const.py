@@ -2,14 +2,14 @@ import os
 
 NOTEBOOK=False
 
-# TODO: Enlarge the image size
 IMG_SIZE = (224, 224)
 IMG_SHAPE = IMG_SIZE + (3,)
 COLOR_MODE = 'rgb'
-BATCH_SIZE = 32
+BATCH_SIZE = 16
+PROJECT_NAME = 'Pneumonia-Classification'
 
 # Dataset params
-CLASS_MODE = 'binary'
+CLASS_MODE = 'raw'
 NUM_CLASS = 1
 
 BASE_PATH = os.getcwd()

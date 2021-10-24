@@ -85,7 +85,7 @@ def predict_for_file_buffer(file_buffer, my_bar, latest_iteration):
 
 if __name__ == '__main__':
     # Page configuration
-    temp = subprocess.Popen([dvc, pull], stdout = subprocess.PIPE)
+    temp = subprocess.Popen(['dvc', 'pull'], stdout = subprocess.PIPE)
     st.set_page_config(page_title=HEADER, page_icon="🤒",
                        initial_sidebar_state='expanded')
 

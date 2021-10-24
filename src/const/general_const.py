@@ -14,4 +14,4 @@ NUM_CLASS = 1
 
 BASE_PATH = os.getcwd()
 CLASS_NAME_PATH = os.path.join(BASE_PATH,"task-3-modeling/src/const/class_names.txt")
-PROD_MODEL_PATH = os.path.join(BASE_PATH,'prod_model')
+PROD_MODEL_PATH = os.path.join(BASE_PATH,'model')

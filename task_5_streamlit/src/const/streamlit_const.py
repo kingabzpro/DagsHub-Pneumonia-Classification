@@ -4,13 +4,13 @@ BASE_PATH = os.getcwd()
 DAGSHUB_IMAGE_PATH = os.path.join(BASE_PATH, "task_5_streamlit/images/dagshub.png")
 
 HEALTHY_IMAGE_ONE_PATH = os.path.join(BASE_PATH,
-                                      "images/IM-0001-0001.jpeg")
+                                      "images/normal/IM-0001-0001.jpeg")
 HEALTHY_IMAGE_TWO_PATH = os.path.join(BASE_PATH,
-                                      "images/IM-0003-0001.jpeg")
+                                      "images/normal/IM-0003-0001.jpeg")
 SICK_IMAGE_ONE_PATH = os.path.join(BASE_PATH,
-                                   "images/person1_virus_6.jpeg")
+                                   "images/virus/person1_virus_6.jpeg")
 SICK_IMAGE_TWO_PATH = os.path.join(BASE_PATH,
-                                   "images/person1_virus_7.jpeg")
+                                   "images/virus/person1_virus_7.jpeg")
 
 HEADER = "Pneumonia-Classification"
 SUB_HEADER = "Classifying chest X-Ray images for Pneumonia"
